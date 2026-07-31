@@ -78,7 +78,7 @@ systemctl enable --now pardus-vpn-client
 > pardus-vpn-gui ve pardus-vpn-client aynı anda çalışmayacaktır.
 
 ## Sunucu/Server
-Kurulum bittikten sonra client.conf dosyasını aşağıdaki gibi düzenleyin:
+Kurulum bittikten sonra server.conf dosyasını aşağıdaki gibi düzenleyin:
 
 ```bash
 nano /etc/pardus-vpn/server.conf
