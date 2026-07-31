@@ -138,7 +138,7 @@ systemctl stop pardus-vpn-client
 
 kontrol:
 
-````bash
+```bash
 ps aux | grep vpn
 ```
 ## TUN arayüzü bulunamadı
