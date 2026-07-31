@@ -68,7 +68,7 @@ Son olarak aşağıdaki komutu yürütün veya çalıştırma kısayoluna tıkla
 
 CLI/komut satırından kullanımı ve otomasyon için systemd de kullanılabilir:
 ```bash
-sudo systemctl enable --now pardus-vpn-client
+systemctl enable --now pardus-vpn-client
 ```
 
 > [!WARNING]  
@@ -106,7 +106,7 @@ Bağlanacak istemcilerin açık anahtarlarını (PUBLIC_KEY) sağlamanız gerekm
 Sunucuyu çalıştırın:
 
 ```bash
-sudo systemctl enable --now pardus-vpn-server
+systemctl enable --now pardus-vpn-server
 ```
 
 systemd'nin sağlanamadığı bir ortamdaysanız manüel de çalıştırabilirsiniz:
