@@ -7,6 +7,9 @@ Saf Go WireGuard benzeri hızlı, güvenli VPN istemcisi/sunucusu
 
 X25519 (ECDH) anahtar değişimi + AES-256-GCM (AEAD) şifreleme kullanılmaktadır
 
+# Ekran Görüntüleri
+![](https://github.com/autkuc/pardus-vpn/blob/main/screen/scr1.png?raw=true)
+![](https://github.com/autkuc/pardus-vpn/blob/main/screen/scr2.png?raw=true)
 ---
 
 # Kurulum
