@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pardus VPN</title>
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #1a1d24;
+    --text: #eef0f3;
+    --muted: #8b93a3;
+    --border: #2a2e38;
+    --accent-off: #ef4444;
+    --accent-on: #22c55e;
+    --accent-connecting: #f59e0b;
+    --btn-text: #0f1115;
+  }
+  html[data-theme="light"] {
+    --bg: #f4f5f7;
+    --card: #ffffff;
+    --text: #1a1d24;
+    --muted: #6b7280;
+    --border: #e2e5eb;
+    --btn-text: #ffffff;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, "Segoe UI", Roboto, "Ubuntu", sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background .2s, color .2s;
+  }
+
+  .topbar {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    display: flex;
+    gap: 8px;
+  }
+
+  .icon-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .icon-btn:hover { opacity: 0.85; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px 36px;
+    width: 360px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  }
+
+  .logo {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+  }
+  .subtitle {
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 28px;
+  }
+
+  .status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    background: var(--accent-off);
+  }
+  .status-dot.connected { background: var(--accent-on); }
+  .status-dot.connecting { background: var(--accent-connecting); }
+
+  .status-label {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .connect-btn {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    border: none;
+    background: var(--accent-off);
+    color: var(--btn-text);
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+    margin: 0 auto 28px;
+    display: block;
+  }
+  .connect-btn.connected { background: var(--accent-on); }
+  .connect-btn.connecting { background: var(--accent-connecting); cursor: wait; }
+  .connect-btn:active { transform: scale(0.97); }
+  .connect-btn:disabled { cursor: not-allowed; opacity: 0.7; }
+
+  .info {
+    text-align: left;
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+  }
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    color: var(--muted);
+  }
+  .info-row span:last-child {
+    color: var(--text);
+    font-family: ui-monospace, monospace;
+  }
+
+  .error {
+    color: var(--accent-off);
+    font-size: 12px;
+    margin-top: 12px;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <button class="icon-btn" id="langBtn">EN</button>
+    <button class="icon-btn" id="themeBtn">☀</button>
+  </div>
+
+  <div class="card">
+    <div class="logo">Pardus VPN</div>
+    <div class="subtitle" id="subtitle">TEKNOFEST 2026</div>
+
+    <div class="status-label">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">—</span>
+    </div>
+
+    <button class="connect-btn" id="connectBtn">—</button>
+
+    <div class="info">
+      <div class="info-row"><span id="lblServer">Sunucu</span><span id="valServer">—</span></div>
+      <div class="info-row"><span id="lblTunnel">Tünel IP</span><span id="valTunnel">—</span></div>
+      <div class="info-row"><span id="lblSent">Gönderilen</span><span id="valSent">0 B</span></div>
+      <div class="info-row"><span id="lblRecv">Alınan</span><span id="valRecv">0 B</span></div>
+    </div>
+
+    <div class="error" id="errorBox"></div>
+  </div>
+
+<script>
+const translations = {
+  tr: {
+    subtitle: "TEKNOFEST 2026",
+    disconnected: "Bağlı değil",
+    connecting: "Bağlanıyor…",
+    connected: "Bağlı",
+    error: "Hata",
+    connectBtn: "Bağlan",
+    disconnectBtn: "Bağlantıyı Kes",
+    connectingBtn: "Bağlanıyor…",
+    lblServer: "Sunucu",
+    lblTunnel: "Tünel IP",
+    lblSent: "Gönderilen",
+    lblRecv: "Alınan",
+  },
+  en: {
+    subtitle: "TEKNOFEST 2026",
+    disconnected: "Disconnected",
+    connecting: "Connecting…",
+    connected: "Connected",
+    error: "Error",
+    connectBtn: "Connect",
+    disconnectBtn: "Disconnect",
+    connectingBtn: "Connecting…",
+    lblServer: "Server",
+    lblTunnel: "Tunnel IP",
+    lblSent: "Sent",
+    lblRecv: "Received",
+  }
+};
+
+let lang = localStorage.getItem("pardusvpn_lang") || "tr";
+let theme = localStorage.getItem("pardusvpn_theme") || "dark";
+let currentState = "disconnected";
+let busy = false;
+
+function applyTheme() {
+  document.documentElement.setAttribute("data-theme", theme);
+  document.getElementById("themeBtn").textContent = theme === "dark" ? "☀" : "☾";
+}
+
+function applyLang() {
+  const t = translations[lang];
+  document.getElementById("subtitle").textContent = t.subtitle;
+  document.getElementById("lblServer").textContent = t.lblServer;
+  document.getElementById("lblTunnel").textContent = t.lblTunnel;
+  document.getElementById("lblSent").textContent = t.lblSent;
+  document.getElementById("lblRecv").textContent = t.lblRecv;
+  document.getElementById("langBtn").textContent = lang === "tr" ? "EN" : "TR";
+  renderState();
+}
+
+function fmtBytes(n) {
+  if (n < 1024) return n + " B";
+  if (n < 1024*1024) return (n/1024).toFixed(1) + " KB";
+  if (n < 1024*1024*1024) return (n/1024/1024).toFixed(1) + " MB";
+  return (n/1024/1024/1024).toFixed(2) + " GB";
+}
+
+function renderState() {
+  const t = translations[lang];
+  const dot = document.getElementById("statusDot");
+  const txt = document.getElementById("statusText");
+  const btn = document.getElementById("connectBtn");
+
+  dot.className = "status-dot";
+  btn.className = "connect-btn";
+
+  if (currentState === "connected") {
+    dot.classList.add("connected");
+    btn.classList.add("connected");
+    txt.textContent = t.connected;
+    btn.textContent = t.disconnectBtn;
+  } else if (currentState === "connecting") {
+    dot.classList.add("connecting");
+    btn.classList.add("connecting");
+    txt.textContent = t.connecting;
+    btn.textContent = t.connectingBtn;
+  } else if (currentState === "error") {
+    txt.textContent = t.error;
+    btn.textContent = t.connectBtn;
+  } else {
+    txt.textContent = t.disconnected;
+    btn.textContent = t.connectBtn;
+  }
+}
+
+async function refreshStatus() {
+  try {
+    const res = await fetch("/api/status");
+    const data = await res.json();
+    currentState = data.state;
+    renderState();
+
+    document.getElementById("valServer").textContent = data.server_endpoint || "—";
+    document.getElementById("valTunnel").textContent = data.tunnel_address || "—";
+    document.getElementById("valSent").textContent = fmtBytes(data.bytes_sent || 0);
+    document.getElementById("valRecv").textContent = fmtBytes(data.bytes_recv || 0);
+
+    const errBox = document.getElementById("errorBox");
+    if (data.last_error) {
+      errBox.textContent = data.last_error;
+      errBox.style.display = "block";
+    } else {
+      errBox.style.display = "none";
+    }
+  } catch (e) {
+    // sunucuya ulaşılamıyor; sessizce yeniden dene
+  }
+}
+
+async function toggleConnection() {
+  if (busy) return;
+  busy = true;
+  const btn = document.getElementById("connectBtn");
+  btn.disabled = true;
+  try {
+    if (currentState === "connected") {
+      await fetch("/api/disconnect", { method: "POST" });
+    } else if (currentState !== "connecting") {
+      await fetch("/api/connect", { method: "POST" });
+    }
+  } catch (e) {
+    // yoksay, bir sonraki status pollingi durumu yansıtacak
+  }
+  await refreshStatus();
+  btn.disabled = false;
+  busy = false;
+}
+
+document.getElementById("themeBtn").addEventListener("click", () => {
+  theme = theme === "dark" ? "light" : "dark";
+  localStorage.setItem("pardusvpn_theme", theme);
+  applyTheme();
+});
+
+document.getElementById("langBtn").addEventListener("click", () => {
+  lang = lang === "tr" ? "en" : "tr";
+  localStorage.setItem("pardusvpn_lang", lang);
+  applyLang();
+});
+
+document.getElementById("connectBtn").addEventListener("click", toggleConnection);
+
+applyTheme();
+applyLang();
+refreshStatus();
+setInterval(refreshStatus, 2000);
+</script>
+</body>
+</html>

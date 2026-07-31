@@ -1,0 +1,16 @@
+[Unit]
+Description=Pardus VPN Sunucu Servisi
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/pardus-vpn-server -config /etc/pardus-vpn/server.conf
+Restart=on-failure
+RestartSec=5
+AmbientCapabilities=CAP_NET_ADMIN
+CapabilityBoundingSet=CAP_NET_ADMIN
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

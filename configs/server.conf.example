@@ -1,0 +1,18 @@
+# Pardus VPN - Sunucu Yapılandırması
+# Anahtar üretmek için: ./pardus-vpn-genkey
+
+[Interface]
+PrivateKey = SUNUCU_OZEL_ANAHTARINI_BURAYA_YAPISTIR
+Address    = 10.8.0.1/24
+ListenPort = 51820
+DeviceName = pardus0
+MTU        = 1420
+
+# Her istemci için ayrı bir [Peer] bölümü ekleyin.
+[Peer]
+PublicKey = ISTEMCI1_ACIK_ANAHTARINI_BURAYA_YAPISTIR
+AllowedIPs = 10.8.0.2/32
+
+[Peer]
+PublicKey = ISTEMCI2_ACIK_ANAHTARINI_BURAYA_YAPISTIR
+AllowedIPs = 10.8.0.3/32

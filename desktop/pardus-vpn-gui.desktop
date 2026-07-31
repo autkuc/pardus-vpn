@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Pardus VPN
+Name[tr]=Pardus VPN
+Comment=Pardus VPN bağlantı arayüzünü açar
+Comment[tr]=Pardus VPN bağlantı arayüzünü açar
+Exec=pkexec pardus-vpn-gui -config /etc/pardus-vpn/client.conf
+Terminal=false
+Icon=network-vpn
+Categories=Network;
