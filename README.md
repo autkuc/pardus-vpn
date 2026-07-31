@@ -22,10 +22,15 @@ apt install golang
 ```
 
 ## Klonla
-Otomatik kurmak için:
 
 ```bash
 git clone https://github.com/autkuc/pardus-vpn
+```
+Güncel çıktılar `bin/` dosyasında sağlanmıştır.
+
+Otomatik baştan kurmak için:
+
+```bash
 cd pardus-vpn
 make build
 ```
