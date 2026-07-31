@@ -5,7 +5,7 @@ Pardus Masaüstü ve Server kolay kullanılabilir VPN yazılımı
 
 Saf Go WireGuard benzeri hızlı, güvenli VPN istemcisi/sunucusu
 
-X25519 (ECDH) anahtar değişimi + AES-256-GCM (AEAD) şifreleme kullanılmaktadır
+X25519 (ECDH) anahtar değişimi + AES-256-GCM (AEAD) şifreleme kullanılmaktadır. Kriptoloji kullanımı, peering ve TUN dahil her şey baştan Go ile yazılmıştır.
 
 # Ekran Görüntüleri
 ![](https://github.com/autkuc/pardus-vpn/blob/main/screen/scr1.png?raw=true)
