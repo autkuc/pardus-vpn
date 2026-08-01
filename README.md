@@ -32,7 +32,7 @@ Otomatik baştan kurmak için:
 
 ```bash
 cd pardus-vpn
-make build
+make install
 ```
 
 ## Anahtar çifti üretme
